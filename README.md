@@ -1,5 +1,5 @@
 # arduino-iot
 arduino IOT projects
 
-Backend code: *.py
+Backend code: *.py,
 Arduino code: *.cc
