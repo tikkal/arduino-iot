@@ -1,6 +1,7 @@
 #include <Stepper.h>
 #include <SPI.h>
 #include <WiFi101.h>
+#include <Adafruit_SleepyDog.h>
 
 // For serial line. Set to false if not debugging over usb.
 #define SERIAL_ENABLED false
@@ -27,7 +28,6 @@ const unsigned long longInterval = 60L * 1000L;
 unsigned long postingInterval = shortInterval;
 String http_input = "";
 WiFiClient wifi_client;
-
    
 // Create an instance of the stepper class, specifying
 // the number of steps of the motor and the pins it's
@@ -162,7 +162,6 @@ void printWifiStatus() {
   PrintDisplay(message);
 }
 
-
 void setup()
 {
   if (SERIAL_ENABLED) {
@@ -197,11 +196,17 @@ void setup()
   CheckCalibration();
 
   // Make first http request.
-  httpRequest();  
+  httpRequest();
+
+  // Set up watchdog.
+  Watchdog.enable();
 }
 
 void loop() {
-    // Build input buffer of data read from wifi client.
+  // Bump watchdog.
+  Watchdog.reset();
+  
+  // Build input buffer of data read from wifi client.
   while (wifi_client.available()) {
     char c = wifi_client.read();
     http_input = http_input + String(c);
