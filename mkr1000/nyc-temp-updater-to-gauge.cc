@@ -21,7 +21,7 @@
 char ssid[] = "ssid";      // your network SSID (name)
 char pass[] = "pass";        // your network password
 int wifi_status = WL_IDLE_STATUS;
-char server[] = "***REMOVED***";
+char server[] = "yourserver.com";
 unsigned long lastConnectionTime = 0; 
 const unsigned long shortInterval = 5L * 1000L;
 const unsigned long longInterval = 60L * 1000L;
