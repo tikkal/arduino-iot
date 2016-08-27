@@ -1,11 +1,14 @@
 /*
- Adapted from: http://arduino.cc/en/Tutorial/WifiWebClientRepeating by Tom Igoe
- */
+
+Adapted from MKR1000 and adafruit example code.
+ 
+*/
 
 #include <SPI.h>
 #include <WiFi101.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library
+#include <Adafruit_SleepyDog.h>
 
 // Set up display
 #define TFT_SCLK   2
@@ -16,7 +19,7 @@
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
  
 char ssid[] = "ssid";      // your network SSID (name)
-char pass[] = "pass";        // your network password
+char pass[] = "pass";      // your network password
 int status = WL_IDLE_STATUS;
 
 // Initialize the Wifi client library
@@ -72,8 +75,8 @@ void setup() {
   // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
     PrintDisplay("WiFi shield not present");
-    // don't continue:
-    while (true);
+    delay(5000);
+    return;
   }
 
   // attempt to connect to Wifi network:
@@ -87,6 +90,9 @@ void setup() {
 
   // Make first http request.
   httpRequest();
+  
+  // Set up watchdog.
+  Watchdog.enable();
 }
 
 String ExtractHttpContent(String raw) {
@@ -107,6 +113,9 @@ String ExtractHttpContent(String raw) {
 }
 
 void loop() {
+  // Bump the watchdog.
+  Watchdog.reset();
+  
   // Build the buffer.
   while (client.available()) {
     char c = client.read();
@@ -159,3 +168,4 @@ void printWifiStatus() {
   message += "signal strength (RSSI): " + String(rssi) + String(" dBm") + String("\n");
   PrintDisplay(message);
 }
+
