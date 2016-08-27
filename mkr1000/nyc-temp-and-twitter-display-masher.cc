@@ -28,8 +28,8 @@ WiFiClient client;
 // Serial toggle for debugging
 bool serial_enabled = false;
 
-// server address:
-char server[] = "***REMOVED***";
+// Backend server to connect to
+char server[] = "yourserver.com";
 unsigned long lastConnectionTime = 0; 
 
 // The first refresh is on 'short interval', subsequent fetches
